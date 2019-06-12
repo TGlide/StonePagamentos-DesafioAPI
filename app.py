@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, abort
 from flask_sqlalchemy import SQLAlchemy
 
 ############################################
@@ -43,16 +43,26 @@ def home():
            '<p>Thomas G. Lopes</p>'
 
 
-@app.route('/api/v1/funcionarios', methods=['GET'])
-def funcionarios_get():
-    func_lista = [func.serialize() for func in
-                  Funcionario.query.all()]  # Cria lista de todos os funcionários em formato serializável
-    return jsonify(func_lista)
-
-
-@app.route('/api/v1/funcionarios', methods=['POST'])
-def funcionarios_post():
-    return
+@app.route('/api/v1/funcionarios', methods=['GET', 'POST'])
+def funcionarios():
+    if request.method == 'GET':
+        func_lista = [func.serialize() for func in
+                      Funcionario.query.all()]  # Cria lista de todos os funcionários em formato serializável
+        return jsonify(func_lista)
+    elif request.method == 'POST':
+        f = Funcionario()
+        if not request.form:
+            abort(400)  # TODO: Display error
+        try:
+            f.nome = request.form['nome']
+            f.idade = int(request.form['idade'])
+            f.cargo = request.form['cargo']
+        except Exception as e:
+            abort(400)
+        else:
+            db.session.add(f)
+            db.session.commit()
+        return jsonify(f.serialize())
 
 
 ########
