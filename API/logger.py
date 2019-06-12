@@ -19,8 +19,8 @@ class Logger():
         file_mode = "a"
         if not os.path.isfile(self.file_name):
             file_mode = "w+"  # Cria arquivo caso não exista
-            print('f')
 
+        # Escrever nova entrada de log
         with open(self.file_name, file_mode) as file:
             for s in args:
                 if type(s) == str:

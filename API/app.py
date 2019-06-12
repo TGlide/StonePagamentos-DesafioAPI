@@ -1,18 +1,36 @@
+import os
+
 from flask import Flask, jsonify, request, abort
 from flask_sqlalchemy import SQLAlchemy
-
-from logger import Logger
+from configparser import ConfigParser
+from API.logger import Logger
 
 ############################################
 # Configurações do app e do Banco de Dados #
 ############################################
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'  # Configuração básica - Não requer PostgreSQL
-# app.config[
-#     'SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postlogin369@localhost:1506/stone_DB'  # Usando PostgreSQL
+app = Flask(__name__)  # Inicializa app
+
+# Abre configurações
+current_path = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(current_path, "settings.ini")
+config = ConfigParser()
+config.read(config_path)
+db_config = config['database']
+
+# Escolhe a database baseada nas configurações
+if config['database']['engine'] == "SQLite":
+    db_path = os.path.join(current_path, '{}.db'.format(db_config['db_name']))
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////{}'.format(db_path)
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(db_config['user'],
+                                                                                      db_config['pw'],
+                                                                                      db_config['host'],
+                                                                                      db_config['port'],
+                                                                                      db_config['db_name'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)  # Inicializa Banco de Dados
-logger = Logger()
+
+logger = Logger()  # Inicializa Logger
 
 
 ###########
@@ -49,22 +67,30 @@ def funcionarios():
     """Manipula as entradas de funcionários no banco de dados"""
 
     if request.method == 'GET':
-        func_lista = [func.serialize() for func in
-                      Funcionario.query.all()]  # Cria lista de todos os funcionários em formato serializável
+        # Cria lista de todos os funcionários em formato serializável
+        func_lista = [func.serialize() for func in Funcionario.query.all()]
+
         logger.log("GET", "Funcionario", "{} iten(s) foram retornados (Sem filtros)".format(len(func_lista)))
         return jsonify(func_lista)
 
     elif request.method == 'POST':
-        f = Funcionario()
+        # Erro: Post efetuado sem dados
         if not request.form:
-            abort(400)  # TODO: Display and log error
+            logger.log("POST", "Funcionario", "Erro: POST sem form-data")
+            abort(400)
+
+        # Cria funcionario
+        f = Funcionario()
         try:
             f.nome = request.form['nome']
             f.idade = int(request.form['idade'])
             f.cargo = request.form['cargo']
+        # Erro: POST efetuado sem todos os dados necessários
         except Exception as e:
-            abort(400)  # TODO: Log error
+            logger.log("POST", "Funcionario", "Erro: POST com form-data incompleto")
+            abort(400)
         else:
+            # Adiciona funcionário ao DB
             db.session.add(f)
             db.session.commit()
             logger.log("POST", "Funcionario", "Add Funcionário {}".format(f))
@@ -75,8 +101,9 @@ def funcionarios():
 def funcionarios_id(identifier):
     """Manipula a entrada de um Funcionário específico no banco de dados"""
     f = Funcionario.query.get(identifier)
+    # Erro: Operação com funcionário não existente
     if not f:
-        logger.log(request.method, "Funcionario<id>", "Erro > Funcionário não existente no banco de dados")
+        logger.log(request.method, "Funcionario<id>", "Erro: Funcionário não existente no banco de dados")
         abort(400)
 
     if request.method == "GET":
@@ -100,9 +127,14 @@ def funcionarios_id(identifier):
                        "Funcionario {} retornado, com nenhum parametro fornecido para atualização".format(f))
         return jsonify(f.serialize())
 
+    elif request.method == "DELETE":
+        db.session.delete(f)
+        db.session.commit()
+        logger.log("DELETE", "Funcionario<id>", "Funcionario {} deletado".format(f))
+
 
 ########
 # Main #
 ########
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='localhost', port='5000', debug=True)
