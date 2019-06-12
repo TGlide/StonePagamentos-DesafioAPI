@@ -67,8 +67,14 @@ def funcionarios():
     """Manipula as entradas de funcionários no banco de dados"""
 
     if request.method == 'GET':
+        nome = request.args.get('nome', default='')
+        idade = request.args.get('idade')
+        cargo = request.args.get('cargo', default='')
+        func = Funcionario.query.filter(Funcionario.nome.contains((nome)),
+                                        Funcionario.idade.
+                                        Funcionario.cargo.contains(cargo))
         # Cria lista de todos os funcionários em formato serializável
-        func_lista = [func.serialize() for func in Funcionario.query.all()]
+        func_lista = [f.serialize() for f in func]
 
         logger.log("GET", "Funcionario", "{} iten(s) foram retornados (Sem filtros)".format(len(func_lista)))
         return jsonify(func_lista)

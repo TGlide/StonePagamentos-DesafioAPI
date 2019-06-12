@@ -11,8 +11,8 @@ SQLite ou PostgreSQL como engine para o Banco de Dados
 ## Instalação
 1. Faça o clone do repositório
 2. Navegue até o diretório StonePagamentos-DesafioAPI
-3. Instale todos os requisitos usando
-`pip install -r requirements.txt` 
+3. Instale todos os requisitos executando
+`pip install -r requirements.txt` no terminal
 4. Navegue até a pasta `API` 
 5. Execute `create_settings.py` no terminal para gerar as
 configurações necessárias (Caso esteja utilizando PostgreSQL,
