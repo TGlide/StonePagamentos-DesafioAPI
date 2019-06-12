@@ -1,0 +1,5 @@
+- [] POST body errors (Wrong args, missing args)
+- [] Log errors in general
+- [] Display proper error messages
+- [] Make better log messages
+- [] MORE COMMENTS
