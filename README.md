@@ -22,8 +22,17 @@ configure este antes, e crie uma database a ser usada pela API)
 Apenas execute `app.py` no terminal, e a API está pronta
 para ser utilizada! 
 
-Por padrão, os requests são acessíveis
-por http://localhost:5000/, e por 
-http://localhost:5000/api/v1/funcionarios para a manipulação
-de funcionários.
+Os requests são acessíveis pela URL 
+mostrada no terminal durante execução do script.
+
+### Para a manipulação de funcionários:
+
+URL/api/v1/funcionarios:
+- GET: Retorna todos os funcionários, com filtros opcionais
+- POST: Adiciona um funcionário
+
+URL/api/v1/funcionarios/(int:ID):
+- GET: Retorna o funcionário específico de id=ID 
+- PUT: Atualiza os dados fornecidos do funcionário de id=ID
+- DELETE: Deleta o funcionário com id=ID
 
