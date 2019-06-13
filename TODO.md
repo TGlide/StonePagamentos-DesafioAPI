@@ -3,4 +3,4 @@
 - [x] Display proper error messages
 - [x] Make better log messages
 - [x] MORE COMMENTS
-- [ ] Filters
+- [x] Filters

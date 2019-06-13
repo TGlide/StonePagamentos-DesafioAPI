@@ -6,10 +6,10 @@ class Logger():
 
     def __init__(self):
         # Gerar nome de arquivo
-        name = datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S.log")
+        name = datetime.datetime.now().strftime("%d-%m-%Y %H.%M.%S.log")
         # Criar diretório de logs
         current_path = os.path.dirname(os.path.abspath(__file__))
-        logs_path = os.path.join(current_path, "logs/")
+        logs_path = os.path.join(current_path, "logs{}".format(os.sep))
         if not os.path.exists(logs_path):
             os.mkdir(logs_path)
 

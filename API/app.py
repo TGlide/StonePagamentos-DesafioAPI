@@ -67,12 +67,14 @@ def funcionarios():
     """Manipula as entradas de funcionários no banco de dados"""
 
     if request.method == 'GET':
+        # Aplica filtros
         nome = request.args.get('nome', default='')
         idade = request.args.get('idade')
         cargo = request.args.get('cargo', default='')
-        func = Funcionario.query.filter(Funcionario.nome.contains((nome)),
-                                        Funcionario.idade.
-                                        Funcionario.cargo.contains(cargo))
+        func = Funcionario.query.filter(Funcionario.nome.contains(nome), Funcionario.cargo.contains(cargo))
+        if idade:
+            func = func.filter_by(idade=idade)
+
         # Cria lista de todos os funcionários em formato serializável
         func_lista = [f.serialize() for f in func]
 
@@ -137,6 +139,7 @@ def funcionarios_id(identifier):
         db.session.delete(f)
         db.session.commit()
         logger.log("DELETE", "Funcionario<id>", "Funcionario {} deletado".format(f))
+        return jsonify(f.serialize())
 
 
 ########

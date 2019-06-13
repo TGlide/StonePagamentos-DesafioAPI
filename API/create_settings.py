@@ -55,7 +55,7 @@ if __name__ == "__main__":
         from API.app import db
         db.create_all()
     except Exception as e:
-        print("Erro ao criar database, por favor execute novamente o script de configuração.")
+        print("Erro ao criar database, por favor execute novamente o script de configuração.({})".format(e))
     else:
         print("Database criada com sucesso!")
 

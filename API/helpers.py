@@ -4,7 +4,7 @@ import time
 
 
 def clear_screen():
-    if platform.system().lower() == "Windows":
+    if platform.system().lower() == "windows":
         return "cls"
     return "clear"
 
