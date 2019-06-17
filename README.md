@@ -19,7 +19,7 @@ configurações necessárias (Caso esteja utilizando PostgreSQL,
 configure este antes, e crie uma database a ser usada pela API)
 
 ## Instruções
-Apenas execute `app.py` no terminal, e a API está pronta
+Apenas execute `python app.py` no terminal, e a API está pronta
 para ser utilizada! 
 
 Os requests são acessíveis pela URL 
