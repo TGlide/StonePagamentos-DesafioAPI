@@ -1,7 +1,7 @@
 import os
 import time
 from configparser import ConfigParser
-from .helpers import clear_screen, screen_prompt
+from helpers import clear_screen, screen_prompt
 
 if __name__ == "__main__":
     os.system(clear_screen())
