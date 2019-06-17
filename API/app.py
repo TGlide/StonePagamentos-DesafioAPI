@@ -3,7 +3,7 @@ import os
 from flask import Flask, jsonify, request, abort
 from flask_sqlalchemy import SQLAlchemy
 from configparser import ConfigParser
-from API.logger import Logger
+from logger import Logger
 
 ############################################
 # Configurações do app e do Banco de Dados #
