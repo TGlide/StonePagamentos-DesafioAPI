@@ -4,11 +4,14 @@ from flask import Flask, jsonify, request, abort
 from flask_sqlalchemy import SQLAlchemy
 from configparser import ConfigParser
 from logger import Logger
+from flask_cors import CORS, cross_origin
 
 ############################################
 # Configurações do app e do Banco de Dados #
 ############################################
 app = Flask(__name__)  # Inicializa app
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Abre configurações
 current_path = os.path.dirname(os.path.abspath(__file__))
@@ -18,15 +21,12 @@ config.read(config_path)
 db_config = config['database']
 
 # Escolhe a database baseada nas configurações
-if config['database']['engine'] == "SQLite":
-    db_path = os.path.join(current_path, '{}.db'.format(db_config['db_name']))
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////{}'.format(db_path)
-else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(db_config['user'],
-                                                                                      db_config['pw'],
-                                                                                      db_config['host'],
-                                                                                      db_config['port'],
-                                                                                      db_config['db_name'])
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(db_config['user'],
+																				  db_config['pw'],
+																				  db_config['host'],
+																				  db_config['port'],
+																				  db_config['db_name'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)  # Inicializa Banco de Dados
 
@@ -57,12 +57,14 @@ class Funcionario(db.Model):
 # Rotas #
 #########
 @app.route('/', methods=['GET'])
+@cross_origin()
 def home():
     return '<h1>Bem-vindo a API desafiadora da Stone Pagamentos!</h1>' \
            '<p>Thomas G. Lopes</p>'
 
 
 @app.route('/api/v1/funcionarios', methods=['GET', 'POST'])
+@cross_origin()
 def funcionarios():
     """Manipula as entradas de funcionários no banco de dados"""
 
@@ -106,6 +108,7 @@ def funcionarios():
 
 
 @app.route('/api/v1/funcionarios/<int:identifier>', methods=['GET', 'PUT', 'DELETE'])
+@cross_origin()
 def funcionarios_id(identifier):
     """Manipula a entrada de um Funcionário específico no banco de dados"""
     f = Funcionario.query.get(identifier)
@@ -146,4 +149,4 @@ def funcionarios_id(identifier):
 # Main #
 ########
 if __name__ == '__main__':
-    app.run(host='localhost', debug=True)
+    app.run(host='localhost',port=5010, debug=True)
