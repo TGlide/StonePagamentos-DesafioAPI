@@ -1,6 +1,5 @@
 # Submissão para Desafio Stone Tecnologia RC
-API desenvolvida utilizando Python e Flask, com opção para utilizar 
-SQLite ou PostgreSQL como engine para o Banco de Dados
+API desenvolvida utilizando Python e Flask, usando PostgreSQL como banco de dados.
 
 ## Requisitos
 - Python 3
