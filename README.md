@@ -15,8 +15,8 @@ SQLite ou PostgreSQL como engine para o Banco de Dados
 `python -m pip install -r requirements.txt` no terminal
 4. Navegue até a pasta `API` 
 5. Execute `python create_settings.py` no terminal para gerar as
-configurações necessárias (Caso esteja utilizando PostgreSQL,
-configure este antes, e crie uma database a ser usada pela API)
+configurações necessárias (Configure o PostgresSQL previamente, para que
+há uma database existente acessível localmente.)
 
 ## Instruções
 Apenas execute `python app.py` no terminal, e a API está pronta
